@@ -313,13 +313,42 @@ create bootstrap form
 Note: controller always return views to show data to the user;
 
 
+==========================================================================
+(47) url() vs route() | What is the difference b/w url and route | what are the Benefits
+
+=> web.php
+# URL route
+Route::get('/test-01', function(){
+    return "test-01";
+});
+
+Route::get('/test-02', function(){
+    return "test-02";
+});
+
+#Name route;
+
+Route::get('/test-01', function(){
+    return "test-01";
+})->name('test.1');
+
+Route::get('/test-02', function(){
+    return "test-02";
+})->name('test.2');
 
 
+=> create.blade.php
 
+# hard coded
+<a href="/test-02" class="btn btn-danger">Go</a> 
 
+#url() is to bind route
+<a href="{{ url('/test-01') }}" class="btn btn-danger">Go</a>
 
+#Name route
+ <a href="{{ route('test.1') }}" class="btn btn-danger">Go</a>
 
-
+Note : Benefits of route name: if you want to change the name of url of route like Route:get('admin/test-01/', ); then you can't change the Name route to run page. but if you use url you must be change the route url. 
 
 
 
