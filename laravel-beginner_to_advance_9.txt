@@ -351,24 +351,20 @@ Route::get('/test-02', function(){
 Note : Benefits of route name: if you want to change the name of url of route like Route:get('admin/test-01/', ); then you can't change the Name route to run page. but if you use url you must be change the route url. 
 
 
+==========================================================================
+(48) What is CSRF Token in Laravel | Why we use csrf token | Csrf stand for
+Notics
+
+ <input type="hidden" name="_token" value="{{ csrf_token()}}"> 
+ @csrf
+ Above command will generate below code
+ <input type="hidden" name="_token" value="Absiekdj3843793437dfke"> 
+
+ Other wise this page is not submitted ;
+@csrf provide token while u want to pass data throuh form.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+=> fake filler chrome extension is used to fill form 
 
 
 
