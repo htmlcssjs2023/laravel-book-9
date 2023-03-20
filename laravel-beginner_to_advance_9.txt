@@ -1,0 +1,456 @@
+1. Laravel course overview
+2. Laravel setup environment
+3. Laravel prerequisit
+3. Create Our First Laravel App, | Install Larvel project.
+=> open project directory using cmd or terminal of vscode.
+=> change directory = cd folder_name
+=> run project = php artisan serv, | php artisan ser
+
+4. Understand the laravel Project Structure.
+
+app
+>Console = all command 
+>Exceptions = error exception
+>Controller = all logic of project store in controller.
+>Models = Database
+>Providers = 
+bootstrap
+config
+
+
+5. What is routes?
+6. Routing in laravel | Create Routes in Laravel | How routing work in laravel?
+
+web.php
+
+=> create new route
+use Illuminate\Support\Facades\Route;
+
+Route::get('/hello', function(){
+    return "Hello Abdul Halim";
+});
+
+where hello is define url; means if you don't pass hello you won't show anything.
+
+(07) Parameterized Route in Laravel | How to Parameterized Route Works | Laravel Routing Parameters
+
+{name?} it is parameterize Route; f($name = null)
+
+(08) Route Constraints in Laravel | How to Apply Route Constraints
+
+Route:get('route_name',clouser)->where(regular expression);
+
+(09) How to Automatically Redirect from One Route to Another | redirect() property in Route
+
+(10) Open Route List in Console | View route list using in Laravel | Ignore vendor package from list
+(11) Redirect from One Route to Another Route using href button
+
+
+=================== Blade ;
+(12) What is Blade in Laravel | How to Create Blade in Laravel | Why we use blade
+(13) Pass Dynamic data to Laravel Blade | Pass variable in laravel blade;
+
+(14) Nested Blade Template | How to Open Nested Blade files in Laravel;
+
+(16) Part-1 Master Layout in Laravel Blade | How to Create Main Layout for all files in blade;
+
+(17) Part-2 Master Layout in Laravel Blade | How to Create Main Layout for all files in blade;
+
+(18) Render Dashboard Template as Master Blade in Laravel
+
+(19) Part-1 Blade Directives in Laravel | How to use Blade directive l | How to use logic in blade
+
+(20) Part-2 Blade Directives in Laravel | How to use Blade directive in Laravel
+
+===================== Controller
+(21) What is Controller | Why we use Controller in Laravel | How to Create Controller in Laravel
+==========================================================================
+(22) Open Blade from Controller in Laravel | Open Blade Template from Controller in Laravel
+(23) Open Parameterized Method in Controller | Open Parametrized Route using Controller in Laravel
+(24) Resource Controller in Laravel | What is Resource Controller | Why we use Resource Controller
+
+=> php artisan make:controller UserController --resource.
+index()
+create()
+store()
+show()
+edit()
+update()
+destroy()
+==========================================================================
+(25) Connect our Laravel App with Database | How to Connect Laravel App with Database
+
+.env > Set all config file
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+==========================================================================
+(26) How to check Laravel App is connected with Database | Check the DB connection of Laravel App
+
+ try{
+        DB::connection()->getPdo();
+        return "Connect Successfully";
+    }
+    catch(PDOException $e){
+        echo $e->getMessage();
+    }
+
+try {
+    DB::connection()->getPdo();
+} catch (\Exception $e) {
+    die("Could not connect to the database.  Please check your configuration. error:" . $e );
+}
+==========================================================================
+(27) What is Migrations in Laravel | Why we use Migrations in Laravel | How to Create them
+==========================================================================
+(28) Create Migration in Laravel | Create Migration Using Command Line
+	=> how to create table
+	php artisan make:migration create_tablename_table 
+	php artisan make:migration create_students_table > hit enter;
+	note: table name will be plural
+
+	=> how to execute table 
+	php artisan migrate > hit enter 
+==========================================================================
+(29) Add Column Into Existing Migration in Laravel | Alter Existing Table in Laravel Migration
+
+	=> Alter table / update table columnn;
+	$table->boolean('is_publish')->default(false);
+	php artisan migrate > hit enter // it show error
+
+	php artisan migrate:refresh > hit enter
+	this command rollback to migration and run execute.
+        :fresh ( first drop table and re-create table )
+
+==========================================================================
+(30) Add Column Into Existing Migration Using New Migration | Add Column in table with New Migration
+	=> New migration
+	php artisan make:migration add_is_active_column_into_table
+
+	   $table->boolean('is_halim')->default(false); // create column at the end table
+		run cmd: php artisan migrate > hit enter .
+
+	   $table->boolean('is_halim')->default(false)->after('is_publish'); // create column after specific column;
+		run cmd: php artisan migrate:refresh > hit enter .
+	
+==========================================================================
+(31) Rollback Migrations in Laravel | How to Rollback Laravel Migrations in Laravel
+ Step-01:  All migration rollback ( insert, update, delete )
+	php artisan migrate:rollback 
+
+Step-02: Again migrations create
+	php artisan migrate 
+
+Step-03: Two or Three step backward migration
+	php artisan migrate:rollback --step=2
+
+Step-04: how to rollback specific migration
+	php artisan migrate:rollback --path=database/migrations/2023_03_19_074113_add_is_halim_column_into_table.php
+==========================================================================
+(32) What are the Migrations helpers | Migration helper data types | Migration helper Data Type
+
+Step-01: How to create table using migration command
+	php artisan make:migration create_students_table
+Step-02: Execute table
+	php artisan migrate 
+
+==========================================================================
+(33) Create Foreign Key Constraint in Laravel | How to Create Foreign Key Using Migration in Laravel
+	  $table->foreignId('user_id')->constrained();
+Explanation: uesr_id 
+where 'user' is model name and _id is postfix
+
+Error: foreign Key is create according to precedence. I mean it run top to bottom. when you want to add foreign key id at the bottom of the table but primary key table is located at the top of foreign key.
+
+
+==========================================================================
+(34) Truncate Table in Laravel | How to Truncate Table in Laravel | Truncate Table in Laravel
+
+Error: foreign Key is create according to precedence. I mean it run top to bottom. when you want to add foreign key id at the bottom of the table but primary key table is located at the top of foreign key.
+
+2014_10_12_000000_create_users_table
+2023_03_18__create_posts_table.php
+==========================================================================
+(35) How to Check Migration Status in Laravel
+Step-01: php artisan migrate:status
+Step-02: php artisan migrate --force
+Step-03: php artisan migrate:reset ( rollback is done );
+Step-04:
+  public function up()
+    {
+        Schema::create('extras', function (Blueprint $table) {
+            $table->id();
+            $table->longText('number');
+            $table->timestamps();
+        });
+
+        Schema::rename('extras', 'changes'); // It is the changes way;
+    }
+
+==========================================================================
+(36) What is Object Relational Mapping (ORM) in Laravel | What is Eloquent | Laravel Models
+Step: 01 How make modal ?
+	php artisan make:model Post [ note: modal always singular ];
+
+Step: 02 How to make modal and with table name using sigle command artisan
+	php artisan make:model Student -m // model name  = Student, table name = students
+	protected $table = ['table_name']; // This interact with db table.
+
+==========================================================================
+(37) Explore Laravel Model Properties
+==========================================================================
+(38) How to Insert data into Database using Laravel Eloquent | Insert Data using ORM
+Step: 01 web.php
+
+Route::get('test', function () {
+    Post::create([
+        'is_halim' => false,
+        'title' => 'Laravel 9.0',
+        'description' => 'This is laravel 9',
+        'is_publish' => false
+    ]);
+
+    return "Successfully Inserted";
+});
+
+Step: 02 Post.php
+
+class Post extends Model
+{
+    // use HasFactory;
+    // manually add model 
+    // protected $table = ['users'];
+
+    // protected $fillable = [ 'is_halim','title','description', 'is_publish'];
+    protected $guarded = [];
+
+}
+
+==========================================================================
+(40) Fetch data from Database in Laravel | Fecth data from database using laravel models
+
+ // $getData = Post::all();
+    // $getData = Post::find(1); // it return index wise value
+    // $getData = Post::findOrFail(2); // it return idex wise value and show error if not find data;
+
+    // $getData = Post::find(0);
+    // if(!$getData){
+    //     return "Not Found";
+    // }
+    //  $getData = Post::where('title', 'Laravel 9.0')->get();
+    //  $getData = Post::where('title', 'Laravel 9.0')->get();
+    //  $getData = Post::where('title', 'Laravel 9.0')->where('description','This is laravel 8')->get();
+    //  $getData = Post::where(['title' => 'Laravel 9.0', 'description' => 'This is laravel 8'])->get();
+     $getData = Post::where(['title' => 'Laravel 9.0', 'description' => 'This is laravel 8'])->get();
+
+==========================================================================
+(41) Search Record in Database Laravel | Find Record using Laravel Model
+
+	Step: 01 web.php
+
+ // $post = Post::find(1);
+
+    // if(! $post){
+    //     return "Not Found";
+    // }
+    // else{
+    //     $post->delete();
+    //     echo "Deleted Successfully";
+    // }
+
+
+==========================================================================
+(43) Move Login to Controller | Laravel 9 Course in Hindi | submit data using Controller method.
+
+=> PostController.php
+
+public function store(Request $request)
+    {
+                Post::create([
+                'is_halim' => false,
+                'title' => 'Laravel 10',
+                'description' => 'This is laravel 10',
+                'is_publish' => false
+            ]);
+            return "Insert Successfully";
+    }
+
+=> web.php
+
+// create route
+Route::get('store', [PostController::class, 'store']);
+
+==========================================================================
+(45) Prepare Controller and Routes for Posts | Laravel Course in Hindi
+Step: 01 How to make controller 
+php artisan make:controller PostController --resource
+
+=> web.php
+Route::resource('posts', PostController::class);
+
+
+==========================================================================
+(46) Create Post in Laravel using Model | Laravel 9 course in Hindi
+=> web.php
+Route::resource('posts', PostController::class);
+
+=> PostController.php
+
+ public function create()
+    {
+        return "Create Post";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
