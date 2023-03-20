@@ -302,13 +302,15 @@ Route::resource('posts', PostController::class);
 
  public function create()
     {
-        return "Create Post";
+        return view('posts.create');
     }
 
 
+=> create.blade.php
+I'm create from views
+create bootstrap form
 
-
-
+Note: controller always return views to show data to the user;
 
 
 
