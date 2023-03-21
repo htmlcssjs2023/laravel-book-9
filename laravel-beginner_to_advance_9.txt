@@ -532,98 +532,46 @@ Route::get('/test', function(Request $request){
 });
 
 
+==============================================================================
+(57) Create Flash Session in Laravel | How to use Flash Session
 
+flash() = It's create session once and then destroy it.
 
+    $request->session()->flash('alert', 'successfull');
 
+        if($request->session()->get('alert-success')){
+            return "Session set";
+        }else{
+            return "Session is not set";
+        }
+    }
 
 
+        // $request->session()->flash('alert', 'successfull');
 
+        // if($request->session()->get('alert')){
+        //     return "Session set";
+        // }else{
+        //     return "Session is not set";
+        // }
 
+        // Session::flash('alert', 'Successful');
+        Session::set('alert', 'Successful');
+        if(Session::get('alert')){
+            return "Set";
+        }
+        else{
+            return "NO";
+        }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   @if(Session::has('alert-success'))
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Saved!</strong> {{ session::get('alert-success')}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+              @endif
 
 
 
