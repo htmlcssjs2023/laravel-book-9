@@ -464,13 +464,72 @@ auto field
 (54) Selected Blade Directive in Laravel 9 | How to make drop down fillable in Laravel 9
 @selected(old('input_name') == 1)
 
+===================================================================
+(55) Insert data using Form in Database | Laravel Course in Hindi
+
+=> PostController.php
+
+  // insert data into table
+        Post::create($request->all());
+
+	dd('Value is saved'); // alert message show you!
+
+  Post::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'is_active' => $request->is_active,
+            'is_publish' => $request->is_publish
+        ]);
+
+Post = Model
+create([]) = insert method
+'title' => $request->title = database table column name;
+
+
+==========================================================================
+(56) How to Create Sessions in Laravel | How to Forget Session in Laravel.
+
+// create route
+
+Route::get('/test', function(){
+	// create session
+
+Session::put('sessionkey', 'session_value');
+
+// check session is set;
+
+	if(Session:has('session_key'){
+
+	return 'session set'
+	}
+	else
+	{ return "session is not set";
+	}
+
+
+});
 
 
 
 
+Route::get('/test', function(Request $request){
+    // return "This is test route ";
 
+    // Session::put('login', 'You are login'); // create session
+    // Session::flash('login', 'You are login'); // create session
 
+    // Session::forget('login'); // forget session
+    //========================== How to forget multiple Session
+    // Session::flush();// Thi is method destroy multiple session
 
+    // if(Session::has('login')){ // Check session
+    //     return "Set Session";
+    // }
+    // else{
+    //     return "Session is not set";
+    // }
+
+});
 
 
 
