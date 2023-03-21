@@ -417,7 +417,33 @@ https://parsleyjs.org/src/parsley.css
  		 $('#form').parsley();
 	</script>
 
+===========================================================================
+(52) Part-1 Server Side Validations in Laravel | How to Validate user from Server side in Laravel
 
+=> PostCtroller.php
+
+ Search on google : laravel any error
+
+ public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required | min:3 |max:10'
+        ]);
+    }
+
+explanation: min:3 mean minimum 3 characters, max:10 mean maximum 10characters of title length
+
+=> create.blade.php
+
+   @if ($errors->any())
+                  <div class="alert alert-danger">
+                      <ul>
+                          @foreach ($errors->all() as $error)
+                              <li>{{ $error }}</li>
+                          @endforeach
+                      </ul>
+                  </div>
+             @endif
 
 
 
