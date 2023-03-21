@@ -445,6 +445,26 @@ explanation: min:3 mean minimum 3 characters, max:10 mean maximum 10characters o
                   </div>
              @endif
 
+=> how to keep last in value in input box?
+
+value = "{{old('title')}}" 
+above snipet code hold previous input filed until submitting the form.
+
+=> How to add in textarea
+
+old version :
+<textarea>{{old('description')}} </textarea>
+<option @if(old('column_name') == 1) selected @endif value="1">
+<option @if(old('column_name') == 0) selected @endif value="0">
+
+auto field
+// latest version 9 and 10
+
+
+(54) Selected Blade Directive in Laravel 9 | How to make drop down fillable in Laravel 9
+@selected(old('input_name') == 1)
+
+
 
 
 
