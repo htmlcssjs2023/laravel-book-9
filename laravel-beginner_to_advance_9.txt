@@ -363,12 +363,59 @@ Notics
  Other wise this page is not submitted ;
 @csrf provide token while u want to pass data throuh form.
 
+	show error : 419 if you don't provide @csrf during form submission
 
 => fake filler chrome extension is used to fill form 
 
+// This is method get all the data from the database table.
+ public function store(Request $request)
+    {
+        return $request->all();
+    }
 
 
+==========================================================================
+(49) Print Form Input Values in Web browser | Laravel Course in Hindi
 
+$request->all(); 
+Above command all kinds of request get and return 
+
+=> Validation 
+	1. Client side validation
+	2. Server side validation
+
+===========================================================================
+(50) Apply Html Validation on Form in Laravel | Laravel 9 Course in Hindi Language
+	
+	1. Client side validation
+
+	set required in input and textarea field
+	set rquired in input and textarea field
+	
+	--> How to set validatin in <option> tag that is selected 
+	slv : value = "" 
+
+
+(51) Parsley js Validations in Laravel
+
+https://parsleyjs.org/src/parsley.css
+=> create.blade.php
+
+<link rel="stylesheet" href="{{ asset() }}">
+
+// asset('file path to be here') method going to public directory
+
+
+	<script src="jquery.js"></script>
+	<script src="parsley.min.js"></script>
+
+	<form id="form" data-parsley-validate>
+		<input required>
+	</form>
+
+	<script>
+ 		 $('#form').parsley();
+	</script>
 
 
 
