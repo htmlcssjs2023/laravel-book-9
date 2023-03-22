@@ -573,6 +573,243 @@ flash() = It's create session once and then destroy it.
                   </div>
               @endif
 
+===========================================================================
+(59) How to redirect in Laravel 9 | Redirect to_route method in Laravel 9
+
+(60) Laravel 9 Course in Hindi | Open Posts in table
+
+=> Show data in table 
+
+step: 02 Go to PostController.php
+ public function index()
+    {
+        // show data into table 
+        $posts = Post::all();
+        return view('posts.index',['posts' => $posts]);
+    }
+
+
+step: 02 create index.blade.php
+
+views > posts> index.blade.php 
+
+  @if(count($posts) > 0)
+                     <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Publish</th>
+                        <th scope="col">Active</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ( $posts as $post )
+                            <tr>
+                                <td>{{$post->title}}</td>
+                                <td>{{$post->description}}</td>
+                                <td>{{$post->is_publish}}</td>
+                                <td>{{$post->is_active}}</td>
+                                
+                            </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                  @else
+                  <h3 class ="text-center">Not found</h3>
+             @endif
+
+
+(61) Paginate Results on Laravel Blade | Paginate posts on index page
+
+=> PostController.php
+
+public function index()
+    {
+        // show data into table 
+        // $posts = Post::all(); 
+        $posts = Post::paginate(5);
+        return view('posts.index',['posts' => $posts]);
+    }
+
+Explanation: 
+-------> $posts = Post::all(); 
+where 
+$posts = variable
+Post = Model name
+:: = static method
+all() = This is method get all data from db table. or model.
+
+-------->  $posts = Post::paginate(5);
+Where 
+paginate() = method
+(5) = How many row show in single page.
+
+-------> view('posts.index',['posts' => $posts]);
+Where 
+view = method
+('posts.index') = posts is folder_name, index is view_name
+['posts' => $posts] = associative array.
+
+=> index.blade.php
+
+{{$posts->render()}}
+
+
+=> AppServiceProvider
+First of all it execute then it execute controller, model, route, etc 
+ 1. Global function
+ 2. Global classes
+
+
+->> If you want to use vendor assets 
+php artisan vendor:publish 
+
+portnumber : 16 enter
+
+=? This is pagination ---------
+
+ public function boot()
+    {
+            // Paginator::defaultView('vendor.pagination.simple-bootstrap-5'); //  use simple tailwind
+            Paginator::defaultSimpleView('vendor.pagination.simple-bootstrap-5');
+    }
+}
+
+====================================================================
+(62) How to show Pagination in Number | Show Pagination in Number Format
+
+=> Error
+Method Illuminate\Database\Eloquent\Collection::total does not exist.
+
+Slv : Amader Blade exist korcena !
+
+
+## Use bootstrap-5 Paginator
+---------> AppServiceProvider.php
+
+ public function boot()
+    {
+            Paginator::defaultView('vendor.pagination.bootstrap-5'); //  use simple tailwind
+            Paginator::defaultSimpleView('vendor.pagination.bootstrap-5');
+    }
+---------> PostCotroller.php
+	$posts = Post::Paginate(10);
+
+
+
+===================================================
+(64) Open Single post in new page
+
+=> PostController.php
+
+ public function show($id)
+    {
+        
+        $post = Post::find($id); // Find Id 
+        if(! $post){ // If id is not exist then error throw 404
+            abort(404);
+        }
+
+
+        return view('posts.show', ['post' => $post]);
+    }
+
+=> show.blade.php 
+
+ <div class="col-md-7 offset-3 mt-5">
+                <h3>Post</h3>
+                @if($post)
+                <span><b>Title : </b>{{$post->title}}</span><br>
+                <span><b>Description : </b>{{$post->description}}</span><br>
+                <span><b>Publish : </b>{{$post->is_publish == 1 ? 'Yes' : 'No'}}</span><br>
+                <span><b>Active : </b>{{$post->is_active == 1 ? 'Yes' : 'No'}}</span><br>
+                @endif
+            
+            </div>
+
+
+=============================================
+(65) How to use Str::limit in Laravel Blade
+
+ <td>{{Str::limit($post->description, '10', '...')}}</td>
+
+
+(66) Edit Post in form
+=> index.blade.php 
+ <a href="{{route('posts.edit', $post->id)}}" class="btn btn-secondary inner" ><i class="fa fa-edit"></i></a>
+
+=> edit.blade.php
+ create copy the create.balde.php file code 
+becuase two filer are same .
+
+ <input type="text" class="form-control" name="title" placeholder="Title here" value="{{ old('title', $post->title)}}">
+
+<textarea class="form-control" placeholder="Write your message here" name="description">
+                        {{ old('description', $post->description)}}
+                      </textarea>
+
+=> PostController.php
+
+public function show($id)
+    {
+        
+        $post = Post::find($id); // Find Id 
+        if(! $post){ // If id is not exist then error throw 404
+            abort(404);
+        }
+
+
+        return view('posts.show', compact('post'));
+    }
+
+
+
+===================================================
+(68) Delete Post in Laravel | Destroy Post in Laravel
+=> index.blade.php
+
+ <form  method="POST" class="inner" action="{{ route('posts.destroy', $post->id)}}" >
+                                      @csrf
+                                      @method('DELETE')
+                                      <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                   </form>
+
+
+
+
+=> PostController.php
+
+ public function destroy(Request $request, $id)
+    {
+        $post = Post::find($id); // Find Id 
+        if(! $post){ // If id is not exist then error throw 404
+            abort(404);
+        }
+        $post->delete();
+        // Session::flash('alert-success', 'form submitted successfully');
+        $request->session()->flash('alert-danger','Post Deleted Successfully');
+
+        // return redirect()->route('posts.index'); // redirect view old version
+        return to_route('posts.index'); // Laravel 9
+
+    }
+
+
+(69) Display Toast when Session is set
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,9 @@
+https://laravel.com/
+https://daylerees.com/codebright/
+https://www.sitepoint.com/php/laravel-php/
+https://www.tutorialspoint.com/laravel/
+https://www.javatpoint.com/laravel-basic-routing
+
+
+https://laracasts.com/series/laravel-8-from-scratch
+https://bitfumes.com/courses/laravel/laravel-for-beginner-from-download-to-deploy
