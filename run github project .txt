@@ -1,0 +1,5 @@
+1. project directory > composer install
+2. cp .env.example .env  // this is snippet code create .env file for database;
+3. php artisan key:generate
+
+4. php artisan serve // This is used to run project.
