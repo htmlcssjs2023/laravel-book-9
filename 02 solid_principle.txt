@@ -1,0 +1,125 @@
+php artisan make:request Post/CreateRequest
+
+How to Submit Form Data into Database?
+Step 1 – Install Laravel 8 Application
+Step 2 – Configuring Database using Env File
+Step 3 – Create Model & Migration File For Add Blog Post Form
+Step 4 – Create Routes
+Step 5 – Creating Controller
+Step 6 – Create Blade File For Add Blog Post Form
+Step 7 – Start Development Server
+Step 8 – Run Laravel 8 Form App On Browser
+
+(72 ) Soft deleting
+==> Post.php Model
+
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Post extends Model
+{
+    use HasFactory; // This is trait
+    use SoftDeletes; // This is trait
+    
+}
+
+=> Add Column in Post add_post_table in migration
+ public function up()
+    {
+        Schema::table('posts', function (Blueprint $table) {
+           $table->softDeletes()->after('is_publish'); // add softDelete()
+        });
+    }
+ public function down()
+    {
+        Schema::table('posts', function (Blueprint $table) {
+            $table->softDeletes(); // delete softDelete() column if exist then create.
+        });
+    }
+
+===> Undo data from database?
+
+step: 01 create controller method softDelete()
+
+public function softDelete(Request $request, $id){
+        $post = Post::onlyTrashed()->find($id);
+        if(! $post){
+            abort(404);
+        }
+
+        $post->update([
+            'deleted_at' => null
+        ]);
+
+        $request->session()->flash('alert-message', 'Data Recovered Successfully');
+        return to_route('posts.index');
+    }
+
+--- web.php
+
+step: 02 create route for soft-delete?
+Route::get('posts/soft-delete/{id}', [PostController::class, 'softDelete'])->name('posts.soft-delete');
+
+--- index.php
+
+step: 03 create undo button with conndition ( if trashed data are available in db then show button )
+ @if ($post->trashed()) 
+    <a href="{{ route('posts.soft-delete', $post->id) }}" class="btn btn-success inner"><i class="fa fa-undo"></i></a>                            @endif
+
+-- toastr.js
+
+ @if(Session::has('alert-message'))
+        toastr["info"]("{{ Session::get('alert-message') }}");
+      @endif
+
+
+
+================================================================================
+(75) What is Query Builder in Laravel | How to use Query Builder in Laravel ?
+
+step: 01 create route;
+web.php ------------------
+
+Route::get('get/posts', [PostController::class, 'getPost'])->name('get.posts');
+
+step: 02
+ public function getPost(){
+        return DB::table('posts')->where('id', '0')->orWhere('title', 'Excepteur sed')->get();
+    }
+
+
+find(); // return id
+pluck('title') // return only title
+first(); // return only first elements
+where('key', 'value'); 
+OrWhere(); 
+
+
+=====================================================================================
+(77) How to run Raw SQL queries in Laravel | How to use Custom Queries in Laravel
+
+PostController.php ---------------------
+
+ // Run raw sql query
+        //  return DB::select('select * from posts');
+        return DB::select('select * from posts where title=?', ['Excepteur sed']);
+
+
+// Insert data into posts table using query builder
+
+
+ return DB::select('insert into posts (id, is_active, title, description,is_publish) values(?, ?, ?, ?, ? )', [10, 1, 'Laravel Development', 'I Love Laravel no', 1]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

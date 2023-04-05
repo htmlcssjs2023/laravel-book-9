@@ -1,0 +1,165 @@
+(94) Part-1 What is Artisan Tinker | Why we use Tinker | How to use Artisan Tinker in Laravel.
+REPL
+read eval print loop
+
+Step: 01
+ php artisan tinker?
+
+User::all() [ hit Enter ]
+
+all: [
+      App\Models\User {#4671
+        id: 1,
+        name: "Md Abdul Halim",
+        email: "mdabdulhalim@gmail.com",
+        email_verified_at: "2023-03-15 15:39:37",
+        #password: "123456",
+        #remember_token: null,
+        created_at: null,
+        updated_at: null,
+      },
+    ],
+  }
+
+
+User::find(1)
+= App\Models\User {#4667
+    id: 1,
+    name: "Md Abdul Halim",
+    email: "mdabdulhalim@gmail.com",
+    email_verified_at: "2023-03-15 15:39:37",
+    #password: "123456",
+    #remember_token: null,
+    created_at: null,
+    updated_at: null,
+  }
+
+> Post::find(3)
+= App\Models\Post {#4681
+    id: 3,
+    is_active: 1,
+    user_id: 1,
+    title: "Quia et laborum",
+    description: "Optio culpa provide",
+    is_publish: "1",
+    deleted_at: null,
+    created_at: "2023-03-27 10:28:49",
+    updated_at: "2023-03-27 10:28:49",
+  }
+
+>
+
+--------------------------> Old Version
+> $user = App\Models\user::find(1)
+= App\Models\User {#4699
+    id: 1,
+    name: "Md Abdul Halim",
+    email: "mdabdulhalim@gmail.com",
+    email_verified_at: "2023-03-15 15:39:37",
+    #password: "123456",
+    #remember_token: null,
+    created_at: null,
+    updated_at: null,
+  }
+
+>
+
+
+> $user->name
+= "Md Abdul Halim"
+
+
+---------------------> stop tinker 
+ctrl + c;
+
+================Insert Data into table using tinker
+Post::create(['title' => 'Laravel', 'description' => 'I'm very hungry', 'is_published' => 0 , 'is_active' => 1])
+
+
+
+// UPDATED VALUE USING TINKER ----------------------
+
+
+> $post->title = 'Updated Tinker';
+= "Updated Tinker"
+
+> $post->save();
+= true
+
+>
+=========================================================================================== 
+(96) What are the Factories in Laravel | How to use the Factories in Laravel App
+(97) Part-2 How to use Model factories in Laravel to Generate the fake data in Database
+
+Step: 01 Make Factories
+php artisan make:factory PostFactory 
+
+
+Step: 02 Go to PostFactory.php add 
+
+ public function definition()
+    {
+        return [
+           
+            'title' => $this->faker->title(),
+            'description' => $this->faker->sentence(),
+            'is_publish' => rand(0, 1),
+            'is_active' => rand(0, 1),
+            'user_id' => 1,
+        ];
+    }
+
+
+Step: 03 DatabaseSeeder.php  [Factory execute from this seed]
+ Post::factory(1)->create();
+
+// factory(1) = One row create in posts table.
+
+Step: 04 Run cmd
+
+php artisan db:seed
+
+
+========================================================================================
+(98) Part-3 How to use Model factories in Laravel | How to pass Dynamic Data in Factories
+
+ public function definition()
+    {
+        return [
+
+ 	// similar to previous        
+            'user_id' => User::find(1),
+        ];
+    }
+
+
+========================================================================
+(104) Part-2 What is Laravel Seeder and How to use seeder in Laravel?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

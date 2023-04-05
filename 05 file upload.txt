@@ -1,0 +1,375 @@
+(113) Part-1 File Uploads | Validate user Image in Laravel Server Side Validation
+
+Step: 01 create Frontend 
+Go 
+create.blade.php
+
+<div class="mb-3">
+    <label for="file">File Upload</label>
+    <input type="file" class="form-control-file form-control" id="file" name = "file">                    
+</div>
+
+Step: 02 add in form 
+<form enctype="multipart/form-data"> 
+It's create an object by which controller could realize it. otherwise controller treat as string. that you upload.
+
+Step: 03
+Go To 
+PostController.php
+
+$file = $request->file;
+dd($file);
+
+--------->PostRequest.php
+
+  public function rules()
+    {
+        return [
+            'file' =>'bail|required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ];
+    }
+
+===========================================================================
+(114) Part-2 File Uploads | Move Image into Laravel Project | Web development in Laravel/
+
+
+
+
+
+
+////////////// file move and saved.
+
+public function store(PostRequest $request)
+    {
+
+        // insert data into table
+        // Post::create($request->all());
+
+        // SAVE DATA 
+
+        // check image is load or not
+        $file = $request->file;
+        if($file){
+            $fileName = time(). '-'.$file->getClientOriginalName();
+            // file path
+            $filePath = public_path().'/assets/images';
+           // file move
+           $file->move($filePath, $fileName);
+           
+           Post::create([
+            'file'=>$$fileName,
+            'title' => $request->title,
+            'user_id' => 1,
+            'description' => $request->description,
+            'is_active' => $request->is_active,
+            'is_publish' => $request->is_publish,
+           
+        ]);
+        }
+
+
+=========================================================================
+(115) Part-3 File Upload in Laravel | Create Gallery Table in Laravel
+
+Step: 01 Make model Gallery with migration 
+php artisan make:model Gallery -m
+
+
+Step: 02 Update Gallery model and galleries migration
+
+2023_04_01_085334_create_galleries_table.php
+
+ public function up()
+    {
+        Schema::create('galleries', function (Blueprint $table) {
+            $table->id();
+            $table->tinyText('name');
+            $table->string('type');
+            $table->timestamps();
+        });
+    }
+
+Run Command
+
+php artisan migrate:fresh
+
+// Above command drop all data and re create all;
+
+
+Step: 03 
+Go
+PostController.php
+
+public function store(PostRequest $request)
+    {
+
+        // check image is load or not
+        $file = $request->file;
+        if($file){
+            $fileName = time(). '-'.$file->getClientOriginalName();
+            // file path
+            $filePath = public_path().'/assets/images';
+           // file move
+           $file->move($filePath, $fileName);
+
+
+          $gallery = Gallery::create([
+                'name' => $fileName,
+                'type' => Gallery::Type
+           ]);
+
+           dd($gallery);
+           Post::create([
+            'gallery_id'=>$gallery->id,
+            'title' => $request->title,
+            'user_id' => 1,
+            'description' => $request->description,
+            'is_active' => $request->is_active,
+            'is_publish' => $request->is_publish,
+           
+        ]);
+        }
+
+Step: 04 Add model Gallery
+Go
+Gallery.php
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Gallery extends Model
+{
+    use HasFactory;
+    public const Type = 1;
+    protected $guarded = [];
+}
+
+Stp: 05 Add new migration to update table
+
+php artisan make:migration add_gallery_id_into_posts_table --table=posts
+
+=> After that command it will create below migration
+2023_04_02_100918_add_gallery_id_into_posts_table.php
+
+-> Open this migratin file
+
+   public function up()
+    {
+        Schema::table('posts', function (Blueprint $table) {
+            $table->foreignId('gallery_id')->after('deleted_at')->constrained();
+        });
+    }
+
+
+  public function down()
+    {
+        Schema::table('posts', function (Blueprint $table) {
+            // This snippet code drop the existing table if have
+            $table->dropColumn('gallery_id');
+        });
+    }
+
+-> Run CMD
+php artisan migrate:fresh
+
+
+=====================================================
+(116) Part-4 File Uploads in Laravel | Load Image in Html table
+
+Step: 01 PostController.php
+
+// Solve Reference error of foreignkey Id
+
+  $user = User::first();
+        if($user){
+            Post::create([
+                'gallery_id' => $gallery->id,
+                'title' => $request->title,
+                'user_id' => $user->id,
+                'description' => $request->description,
+                'is_active' => $request->is_active,
+                'is_publish' => $request->is_publish,
+               
+            ]);
+
+Step: 02 Define relationship in Model
+
+   // image gallery_id relationship define here .
+
+    public function image(){
+        return  $this->belongsTo(Gallery::class, 'gallery_id', 'id');
+    }
+
+
+Step: 03 
+Go
+-> index.blade.php
+
+ <td><img src="{{ asset('assets/images/'. $post->image->name) }}" alt="" style="width:50px; height:auto"></td>
+
+
+
+=================================================================================
+(117) Part-5 File Uploads in Laravel | Load Image path using Accessor in Laravel
+
+
+Step: 01 
+Go
+--> Gallery.php Model
+
+  // upload image  path using accessror
+    public $uploadImage = 'assets/images/';
+
+    protected function name():Attribute
+    {
+        return Attribute::make(
+            get:fn($value) => $this->uploadImage.$value
+        );
+    }
+}
+
+Step: 02 call accessor
+Go 
+--> index.blade.php
+ <td><img src="{{ $post->image->name }}" alt="" style="width:50px; height:auto"></td>
+
+
+
+===================================================================================
+(118) Part-6 File Uploads | Upload Image using Storage Disk | Upload files using filesystem
+
+Step: 01 Link storage with public folder
+php artisan storage:link
+
+Step: 02 PostController.php
+
+ public function store(PostRequest $request)
+    {
+
+        // insert data into table
+        // Post::create($request->all());
+
+        // SAVE DATA 
+
+        // check image is load or not
+        $file = $request->file;
+        if($file){
+            $fileName = time(). '-'.$file->getClientOriginalName();
+            // file path
+            $filePath = public_path().'/assets/images';
+           // file move
+        //    $file->move($filePath, $fileName);
+	-------------------------------------------------------------------
+          $filePath = '/assets/posts/images';
+          $file = Storage::disk('public')->put($filePath, $file);
+          $fileName =basename($file);
+
+            // dd($fileName);
+---------------------------------------------------------------------------------
+          $gallery = Gallery::create([
+                'name' => $fileName,
+                'type' => Gallery::Type
+           ]);
+
+    // make a dynamic user_id
+
+        $user = User::first();
+        if($user){
+            Post::create([
+                'gallery_id' => $gallery->id,
+                'title' => $request->title,
+                'user_id' => $user->id,
+                'description' => $request->description,
+                'is_active' => $request->is_active,
+                'is_publish' => $request->is_publish,
+               
+            ]);
+        }
+      
+        }
+    
+      
+
+        // dd('Values are saved');
+        Session::flash('alert-success', 'Post save successfully');
+
+        // return redirect()->route('posts.create'); // redirect view old version
+        return to_route('posts.create'); // Laravel 9
+
+    }
+
+
+===========================================================================
+
+(119) Part-7 File Uploads | Create your Own File System in Laravel | Create new file system in lara
+
+Step: 01
+Go 
+Config.php
+
+        // Own file system added here 
+        'post' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/assets/posts/images/test'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+        ],
+
+Step: 02 
+Go
+PostController.php
+
+  $filePath = '/';
+          $file = Storage::disk('post')->put($filePath, $file);
+          $fileName =basename($file);
+
+Step: 03 
+
+default filesystem
+ $file = Storage::put($filePath, $file);
+
+Step:04
+Go 
+.env
+FILESYSTEM_DISK=post
+
+
+Step: 04 show image
+
+Go
+Gallery.php Model
+add image path;
+
+class Gallery extends Model
+{
+    public $uploadImage = '/storage/assets/posts/images/';
+
+    protected function name():Attribute
+    {
+        return Attribute::make(
+            get:fn($value) => $this->uploadImage.$value
+        );
+    }
+}
+
+===================================================================
+
+(120) Delete Image in Laravel | Unlink Image in Laravel Application
+Step: 01
+Gos
+PostController.php 
+
+      public function destroy(Request $request,$id)
+    {
+-----------------------------------------------------------------
+        $file = public_path().$post->image->name;
+        if(fileExists($file)){
+            unlink($file);
+        }
+
+----------------------------------------------------------------    
+    }

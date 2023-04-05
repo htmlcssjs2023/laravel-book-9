@@ -1,0 +1,19 @@
+(127) Part-1 Compile Assets in Laravel | How to Generate minified Files in Laravel in Hindi
+
+Note : If you have 10 files in your project but you want to convert one single minified file
+then use webpack.mix.js file 
+
+Step: 01 
+install npm
+--> cmd command : npm install
+Step: 02
+Go To 
+webpack.mix.js file
+
+--> Cut js and css file from the public folder and past into js & css in resources folder.
+--> run command: npm run dev 
+
+if any error show again run command below.
+--> npm install --save jquery
+
+

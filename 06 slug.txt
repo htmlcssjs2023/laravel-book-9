@@ -1,0 +1,173 @@
+(122) What is slug | How to Create Slug in Laravel | How to generate pretty url in Laravel
+
+Step: 01 Add column in Posts table using migration fresh
+
+Go > 2023_03_18_134821_create_posts_table.php
+  public function up()
+    {
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();  // this is primary key
+            $table->foreignId('user_id')->constrained();
+            // $table->integer('user_id');
+            $table->string('title');
+            $table->string('slug'); ---------------------------------------------------
+            $table->text('description');
+            $table->string('is_publish')->default(false);
+            $table->timestamps();  // execute two column 1. created_at 2. updated_at 
+        });
+    }
+
+Step: 02 run command fillable in Post Model
+
+1. php artisan migrate:fresh
+2. protected $fillable = ['slug'];
+
+Step: 03 set logic in PostController.php
+
+$slug = Str::slug($request->title, '-');
+dd($slug); // It's used for testing purpose only.
+
+
+
+ Post::create([
+                'gallery_id' => $gallery->id,
+                'title' => $request->title,
+                'slug' => $slug, ---------------------------------------
+                'user_id' => $user->id,
+                'description' => $request->description,
+                'is_active' => $request->is_active,
+                'is_publish' => $request->is_publish,
+               
+            ]);
+
+
+Step: 04 add custom route
+Go to web.php
+
+Route::get('posts', [PostController::class, 'index'])->name('posts.index');
+Route::post('posts', [PostController::class, 'store'])->name('posts.store');
+Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');
+Route::get('posts/{id}', [PostController::class, 'show'])->name('posts.show');
+Route::get('posts/{id}/edit', [PostController::class, 'edit'])->name('posts.edit');
+Route::patch('posts/update/{id}', [PostController::class, 'update'])->name('posts.update');
+Route::delete('posts/delete/{id}', [PostController::class, 'destory'])->name('posts.destroy');
+
+
+Step: 05
+
+Go to web.php 
+Route::get('posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
+
+Step: 06
+Go To PostController.php 
+
+  public function show(Post $post)
+    {
+        return view('posts.show', ['post' => $post]);
+    }
+
+Step: 06 Add method 
+Go To
+Post.php
+
+ public function getRouteKeyName(){
+        return 'slug';
+    }
+
+
+Step: 07 Change the variable reference in 
+
+index.blade.php
+<a href="{{ route('posts.show',$post->slug)}}" class="btn btn-primary inner"> <i class="fa fa-eye"></i> </a>
+
+
+Step: 08 Add validation using request
+
+--> create CreateRequest
+php artisan make:request CreateRequest [ press enter ]
+
+ public function rules()
+    {
+        return [
+            'file' =>'bail|required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'title' => 'required|min:3|max:30',
+            'slug' => 'required|unique:posts,slug',
+            'description' => 'required|min:3|max:500',
+            'is_publish' => 'required',
+            'is_active' => 'required'
+        ];
+    }
+
+--> create UpdateRequest
+php artisan make:request UpdateRequest[ press enter ]
+
+   public function rules()
+    {
+        return [
+            'file' =>'bail|required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'title' => 'required|min:3|max:30',
+            'description' => 'required|min:3|max:500',
+            'slug' => 'required',
+            'is_publish' => 'required',
+            'is_active' => 'required'
+        ];
+    }
+
+Step: 09 Add checking in database tier
+Go
+To 
+Migration: 2023_03_18_134821_create_posts_table.php
+ public function up()
+    {
+        Schema::create('posts', function (Blueprint $table) {
+            $table->string('slug')->unique();
+            
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

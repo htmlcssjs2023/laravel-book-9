@@ -748,6 +748,7 @@ becuase two filer are same .
 
 <textarea class="form-control" placeholder="Write your message here" name="description">
                         {{ old('description', $post->description)}}
+@if($post->is_publish ==1) selected @endif
                       </textarea>
 
 => PostController.php
@@ -796,9 +797,38 @@ public function show($id)
 
     }
 
-
+===================================================================== Toast Message
 (69) Display Toast when Session is set
+where you want to set toaster :
 
+<link rel="stylesheet" href="{{ asset('assets/css/toastr.min.css') }}">
+ <script>
+      toastr.options = {
+              "closeButton": true,
+              "newestOnTop": false,
+              "progressBar": true,
+              "positionClass": "toast-bottom-center",
+              "preventDuplicates": false,
+              "onclick": null,
+              "showDuration": "300",
+              "hideDuration": "1000",
+              "timeOut": "5000",
+              "extendedTimeOut": "1000",
+              "showEasing": "swing",
+              "hideEasing": "linear",
+              "showMethod": "fadeIn",
+              "hideMethod": "fadeOut"
+            }
+
+  </script>
+
+ <script src="{{ asset('assets/js/toastr.min.js') }}"></script>
+ <script>
+      @if(Session::has('alert-danger'))
+        toastr["warning"]("{{ Session::get('alert-danger') }}");
+      @endif
+
+  </script>
 
 
 

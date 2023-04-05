@@ -1,0 +1,628 @@
+
+=============================================================================
+(78) What are the Relationship in Laravel | Why we use relations | One to one Relationship
+
+ public function post(){
+        return $this->hasOne(Post::class,'user_id', 'id');
+// $this->hasOne = users has one relation
+user_id = foreignkey of posts table 
+id = reference of users table
+    }
+
+hasOne() that means this model can't contain foreignkey;
+
+
+=============================================================================
+(79) One to one Inverse Relationship in Laravel | One to one inverse Relation in Laravel
+
+step: 01 
+Post.php ============== this model
+
+ public function user(){
+        // return $this->belongsTo(Post::class, 'user_id', 'id');
+        return $this->belongsTo(Post::class); // This is laravel convention
+    }
+
+belongsTo(); that means Post model have foreignkey
+
+
+step: 02
+web.php ========================== 
+
+Route::get('/test', function () {
+    $user = Post::first();
+    return $user->user;
+});
+
+
+
+=====================================================================
+(80) One to Many Relationship in Laravel | One to Many Relation in Laravel
+
+User.php =============  Model
+
+ public function posts(){
+        return $this->hasMany(Post::class)->where('title', 'Ab itaque');
+    }
+
+web.php ===================== route
+
+Route::get('test', function () {
+
+    $user = User::first();
+    return $user->posts;
+});
+
+=====================================================================================
+(81) One to Many Inverse Relationship in Laravel | One to Many Inverse Relation in Laravel
+
+   public function user(){
+  
+        return $this->belongsTo(Post::class); // This is laravel convention
+    }
+
+Note : It's not be plural.
+
+
+Route::get('test', function(){
+	$user = User::first();
+	return $user->user;
+
+})
+
+========================================================================
+(82) Default Relationship in Laravel | withDefault method in Laravel Relation
+
+User.php ------------Model
+
+   public function post(){
+        return $this->hasOne(Post::class);
+    }
+
+    public function posts(){
+        return $this->hasMany(Post::class)->where('title', 'Ab itaque');
+    }
+
+
+// with default
+
+
+   public function post(){
+        return $this->hasOne(Post::class)->where('title', 'test')->withDefault(['key', 'Laravel Post']);
+    }
+
+
+   public function post(){
+        return $this->hasOne(Post::class)->withDefault(['key', 'Laravel Post']);
+    }
+
+web.ph ----------------------------------------
+
+
+
+
+==========================================================================
+(83) hasOneThrough Relationship in laravel | Has One Through relation in laravel hindi language
+
+
+php artisan make:model ModelName -a
+
+model
+controller
+seeder
+migration
+factory
+
+   php artisan make:model ModelName -mcr 
+	model
+	controller
+	resource method
+
+step: 01
+ make:model comment and migration
+
+step: 02 add field and foreignkey
+
+  public function up()
+    {
+        Schema::create('comments', function (Blueprint $table) {
+            $table->id();
+	// create foreignkey
+
+            $table->foreignId('post_id')->constrained();
+            $table->string('message');
+
+            $table->timestamps();
+        });
+    }
+
+step: 03 // set fillable
+
+class comment extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['post_id', 'message'];
+}
+
+step: 04 create relationship between three table
+
+User.php ---------------
+
+ public function postComment(){
+        return $this->hasOneThrough(Comment::class, Post::class);
+    }
+
+
+// Jar sate hobe prothome tar nam hobe, tar por jarmoddodiye hobe tar nam hobe, 
+
+step: 05 create route 
+
+Route::get('test', function () {
+
+     $user = User::first();
+     return $user->postComment;
+});
+
+
+====================================================
+
+(84) hasManyThrough Relationship in laravel | Has ManyThrough relation in laravel hindi language
+
+Step: 01 User.php Model
+
+  public function postComments(){
+        return $this->hasManyThrough(Comment::class, Post::class);
+    }
+
+Step: 02 web.php
+
+Route::get('test', function () {
+// hasManyThrough
+
+    $user = User::first();
+    return $user->postComments;
+});
+
+=========================================================
+
+(85) Part-1 Many to Many Relationship in laravel
+
+Step: 01 Create Role Mode with migration
+php artisan make:model -m
+
+Step: 02 Create table role_user
+php artisan make:model create_role_users_table --create=role_user (Enter)
+
+Step: 03 Add foreignId in role_users table
+
+  {
+        Schema::create('role_user', function (Blueprint $table) {
+           $table->foreignId('role_id')->constrained();
+           $table->foreignId('user_id')->constrained();
+        });
+    }
+
+php artisan migrate ( Enter )
+
+
+Step: 04 Make relationship between roles and users
+
+1. 
+--------> User.php Model 
+
+ // Monay to Many
+    public function roles(){
+        return $this->belongsToMany(role::class);
+    }
+2. 
+---------> Role.php Model
+
+ public function users(){
+        return $this->belongsToMany(User::class);
+    }
+
+Step: 05  Make route
+
+--------> web.php 
+
+Route::get('test', function () {
+    $user = User::first();
+    $role = role::first();
+
+    return $user->roles()->attach($role);
+
+
+
+ // $user = User::first();
+    // $role = Role::first();
+
+    // return $user->roles()->attach($role);
+    // return $user->roles()->detach($role);
+
+    // $role->users()->attach($user);
+    // $role->users()->attach($user);
+    // return "attached";
+
+
+    // sync
+    $user = User::first();
+    $role = Role::first();
+    // $user->roles()->attach([1,2]);
+    // return 'attached';
+
+    // $user->roles()->detach([1]);
+
+
+==============================================================
+(87) How to use Sync Method | Attach array using attach Method in Many to Many relationship
+
+
+        $user->roles()->sync($role);
+
+// sync method remove exist id and add current id;
+
+	$user->roles()->sync([1, 2]);
+
+    return 'detached';
+});
+
+==========================================================
+(88) Part-1 One to One Polymorphic Relationship in laravel | Laravel 9 Course in Hindi
+
+Step: 01 Make Model with Migration 
+
+php artisan make:model Image -m
+
+Step: 02 Add column in Images table using migration 
+
+url - string
+imageable_id - integer
+imageable_type - string
+
+
+-> Then run 
+php artisan migrate (Enter)
+
+Step: 03 Go to Image.php Model
+
+protected $guarded = [];
+
+ public function imageable(){
+        return $this->morphTo();
+    }
+
+
+Step: 04 Define realtionship between Models
+
+------> User.php
+
+ // define relationship
+
+    public function image(){
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+
+------> Post.php
+
+// define relationship
+
+    public function image(){
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+
+Step: 05 Go to route to create route;
+
+------> web.php
+
+Route::get('test', function(){
+
+   $user = User::first();
+    return $user->image;
+
+   
+});
+
+
+
+================================================
+(90) One to Many Polymorphic Relationship in Laravel
+
+Step: 01 Define relationship in User
+
+-->User.php Model
+
+  public function images(){
+        return $this->morphMany(Image::class, 'imageable');
+    }
+
+---> Post.php Model 
+
+ // many to many polymorphic
+    public function images(){
+        return $this->morphMany(Image::class, 'imageable');
+    }
+}
+
+Step: 02 Get Data 
+
+-----> web.php 
+
+ // $user = User::first();
+    // return $user->images;
+   
+    // $post = Post::first();
+    // return $post->images;
+
+
+
+
+
+
+(91) Many to Many Polymorphic Relationship in laravel | Laravel 9 Course in Hindi
+
+
+Step: 01 Make Model Tag with migration
+
+php artisan make:model Tag -m
+
+Step: 02 Create table using migration
+
+php artisan make:migration create_taggables_table --create=taggables (enter)
+
+Step: 03 define foreignkey in taggables table
+
+   public function up()
+    {
+        Schema::create('taggables', function (Blueprint $table) {
+            $table->foreignId('tag_id')->constrained();
+            $table->integer('taggable_id');
+            $table->string('taggable_type');
+        });
+    }
+
+Step: 04 add name field in Tags table using migration
+
+ public function up()
+    {
+        Schema::create('tags', function (Blueprint $table) {
+            $table->id();
+            $table->string('name'); ///////
+            $table->timestamps();
+        });
+    }
+
+Step: 05 Run Artisan cmd
+
+php artisan migrate (Enter)
+
+Step: 06 Define relationship in Tag Model 
+
+class Tag extends Model
+{
+    use HasFactory;
+    protected $guarded = [];
+
+// Define relationship with Post Model
+
+    public function posts(){
+        return $this->morphedByMany(Post::class, 'taggable');
+    }
+}
+
+Step: 07 Define relation in Post Model
+
+ public function tags(){
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+Step: 08 Create route
+
+---> web.php
+
+  $post = Post::first();
+   return $post->tags;
+
+
+Step: 09 Insert Data into Tag and Taggables table
+
+
+Similarly others tables relation to be.
+
+
+(94) Part-1 What is Artisan Tinker | Why we use Tinker | How to use Artisan Tinker in Laravel
+
+Artisan Tinker is a command to use this perform Database ativities 
+for an example ? You want to see data from specific table 
+
+2. Update data 
+3. Insert Data
+4. To see relationship
+etc
+
+(104) Part-2 What is Laravel Seeder and How to use seeder in Laravel?
+(105) Run Seeders and Factories at Once in Laravel | Execute Laravel seeders and factories
+
+-------> DatabaseSeeder.php
+
+ public function run()
+    {
+
+        // Image::factory(1)->create();
+        Post::factory(1)->create();
+        // Tag::factory(1)->create();
+        // User::factory()->create();
+
+        $this->call([
+            PostSeeder::class
+            // TagSeeder::class,
+            // UserSeeder::class
+        ]);
+    }
+
+------------> TagSeeder.php
+
+ public function run()
+    {
+        Tag::create([
+            'name' => 'Laravel 10'
+        ]);
+    }
+
+=============================================================================
+(106) Accessers and Mutators in Laravel | Why we accesser and mutator in Laravel
+In which format you want to save data into database;
+--------------> Post.php 
+
+  // Accessor and Mutator
+
+    //    public function getTitleAttribute($v){
+    //     return ucfirst($v);
+    //    }
+
+    // Accessor laravel 9
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($val) => ucfirst($val)
+        );
+    }
+
+
+
+================================================================== 
+(108) What are the Mutators in Laravel | Why we use Mutator | How to use Mutator in Laravel 9
+
+// This is an old version
+
+  // =============== Mutator
+    public function setTitleAttribute($v){
+        $this->attributes['title'] = strtolower($v);
+    }
+
+
+// Laravel 9 
+
+  protected function title(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($val) => ucfirst($val),
+            set: fn($val) => strtolower($val)
+        );
+    }
+
+===============================================================================
+(109) Attribute Casting in Laravel | Laravel Tutorial | Php laravel tutorial
+
+Post.php Model ..
+
+protected $casts = [
+	'title' => 'encrypt'
+]
+
+
+==============================================================================
+(110) What are the Query Scopes in Laravel | What is Global query scope in laravel
+
+Step: 01
+
+php artisan make:scope PostScope
+
+Post.php ---------
+
+ public static function booted(){
+        static::addGlobalScope(new PostScope);
+  }
+
+
+Step: 02 App\Scopes\PostScope.php 
+
+public function apply(Builder $builder, Model $model)
+    {
+       $builder->where('is_published', 1);
+    }
+}
+
+
+=======================================================================
+
+(111) Remove Global Scope from query in Laravel | Laravel Tutorial
+
+-------------------> Post.php 
+
+public static function booted(){
+    static::addGlobalScope('active', function(Builder $builder){
+        $builder->where('is_publish', false);
+    });
+}
+
+
+// If you want to apply without global scope -------------
+
+PostController.php > show();
+
+return Post::withoutGlobalScope(new PostScope);
+
+
+===========================================================================
+
+(112) Local Scope in Laravel | Why we use Local Scope in Laravel | Laravel Course in Hindi
+
+--------> Post.php Model 
+
+public function scopeActive($val){
+	$val->where('is_active', true );
+}
+
+
+-------> PostController.php
+Apply local scope
+  $posts = Post::active()->withTrashed()->paginate(10);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
