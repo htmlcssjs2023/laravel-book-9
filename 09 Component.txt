@@ -1,0 +1,70 @@
+(134) Part-1 Components in Laravel | Laravel Beginners to Advance Course in Urdu
+
+
+Step: 01 Make Component
+
+php artisan make:component component_name;
+
+example: 
+php artisan make:component Alert [Hit Enter];
+
+Step: 02 Call component in blade.php template
+<x-componentName/>
+<x-alert />
+
+
+Step: 03 Pass dynamic data using component
+
+Go to 
+home.blade.php
+<body>
+    This is home page
+    <x-alert title="this is component"/>
+</body>
+
+
+Step: 04 
+Go to 
+class Alert extends Component
+{
+    public $title;
+    public function __construct($title)
+    {
+       $this->title = $title;
+    }
+    public function render()
+    {
+        return view('components.alert');
+    }
+}
+
+Step: 05 Components
+alert.blade.php
+
+<div>
+   <h1>I'm Component Alert</h1>
+   <p>{{ $title }}</p>
+</div>
+
+
+==============
+Make annonymous component 
+
+php artisan make:component --view 
+
+{{$data}} it will be in annonymous component.
+
+
+
+== without name slot
+
+<x-example>
+
+	<h1> This is slot </h1>
+</x-example>
+
+
+--> Call slot
+Go to home.blade.php
+
+{{$slot}}

@@ -1,0 +1,27 @@
+1. Software Engineering [Agile, SCRUM, Water Model, Code Testing, DevOps etc ]
+2. Database Architecture
+3. Data Manipulation
+4. Data Structure
+5. UML - Visual Paradiam
+6. Version Controll [github, gitlab]
+7. Language Technology
+	A. HTML
+	B. CSS
+	C. Bootstrap
+	D. Tailwind CSS
+	E. JavaScript
+	F. React JS / Vue / Next JS 
+	G. PHP / C# / JavaScript / Java
+	H. Laravel/ CodeIgnitor 
+8. Editor [ vscode, notepad++, sublimtext ]
+
+==========================================================
+Routine :
+
+1. Database - 30 min [Every Day]
+2. Laravel Basic - 60 min [Every Day] 1hours
+3. Laravel Project-01 240 min [Every Day] 4hours
+4. Laravel Project-02 240 min [Every Day ] 4hours
+
+==========
+5. React JS 180 min [Every Day] 3 hours
